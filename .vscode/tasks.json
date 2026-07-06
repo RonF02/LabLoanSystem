@@ -7,7 +7,7 @@
             "command": "cmd",
             "args": [
                 "/c",
-                "cd /d \"${workspaceFolder}\" && C:\\msys64\\ucrt64\\bin\\gcc.exe -g -Iinclude src\\*.c -o build\\LabLoanSystem.exe"
+                "cd /d \"${workspaceFolder}\" && C:\\msys64\\ucrt64\\bin\\gcc.exe -std=c11 -g -Iinclude src\\*.c -o build\\LabLoanSystem.exe"
             ],
             "group": {
                 "kind": "build",
