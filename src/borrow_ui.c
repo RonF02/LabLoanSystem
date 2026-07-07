@@ -17,6 +17,7 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord 
         puts("\n=== 借用管理 ===");
         puts("1. 借用登记");
         puts("2. 归还登记");
+        puts("3. 查询借用记录");
         puts("0. 返回主菜单");
         printf("请选择：");
 
@@ -135,6 +136,20 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord 
             }
 
             puts("归还登记失败，请检查借用记录 ID、数量和日期。\n");
+            stop();
+            continue;
+        }
+        else if (strcmp(choice, "3") == 0)
+        {
+            char name[MAX_NAME_LENGTH];
+            printf("请输入借用人姓名进行查询：");
+            if (!read_line(name, sizeof(name)) || strlen(name) == 0)
+            {
+                puts("借用人姓名不能为空。\n");
+                stop();
+                continue;
+            }
+            print_record_by_name(borrows, *borrow_count, name);
             stop();
             continue;
         }

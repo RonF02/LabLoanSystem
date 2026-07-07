@@ -1,5 +1,6 @@
 #include "item_ui.h"
 #include "utils.h"
+#include "sync.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -80,12 +81,7 @@ bool item_manage_menu(Item items[], int *item_count, const BorrowRecord borrows[
             }
 
             printf("请输入物品描述：");
-            if (!read_line(description, sizeof(description)))
-            {
-                puts("物品描述读取失败。\n");
-                stop();
-                continue;
-            }
+            scanf("%[^\n]", description); // 读取整行描述，包括空格和换行符
 
             // 调用 item_add 函数新增物品
             if (item_add(items, item_count, code, name, model, quantity, description))
@@ -150,7 +146,8 @@ bool item_manage_menu(Item items[], int *item_count, const BorrowRecord borrows[
             // 调用 item_update 函数修改物品信息
             if (item_update(items, *item_count, code, name, model, quantity, description))
             {
-                puts("物品修改成功。\n");
+                sync_items(items, *item_count); // 同步物品数据到文件
+                puts("物品修改成功，已同步至数据文件。\n");
                 stop();
                 continue;
             }

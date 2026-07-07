@@ -41,4 +41,6 @@ int borrow_next_id(const BorrowRecord borrows[], int count);
 // 获取下一个可用的归还记录 ID。
 int return_next_id(const ReturnRecord returns[], int count);
 
+void print_record_by_name(const BorrowRecord borrows[], int count, const char *user);
+
 #endif // BORROW_H

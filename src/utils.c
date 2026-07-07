@@ -103,12 +103,13 @@ void print_items_preview(const Item items[], int count)
         puts("暂无物品记录。\n");
         return;
     }
+    puts("========================");
 
-    puts("ID  |  编号  |   名称   |   型号   | 库存 | 描述");
-    puts("----+--------+----------+----------+------+------------------------");
+    puts("ID  |  编号  |   名称   |  型号 |库存| 描述");
+    puts("----+--------+----------+-------+----+------------------------");
     for (int i = 0; i < count; ++i)
     {
-        printf("%-3d |%8s|%-12s| %-8s | %-4d | %s",
+        printf("%-3d |%-8s|%s\t|%-s\t|%-4d|%-s",
                items[i].id,
                items[i].code,
                items[i].name,
@@ -116,7 +117,7 @@ void print_items_preview(const Item items[], int count)
                items[i].quantity,
                items[i].description);
     }
-    puts("----+--------+----------+----------+------+------------------------");
+    puts("----+--------+----------+-------+----+------------------------");
 }
 
 static int date_to_int(const char *date)
