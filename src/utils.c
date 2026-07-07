@@ -1,8 +1,9 @@
 #include "utils.h"
 
+#include <ctype.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
 // 从标准输入读取一行字符串
 bool read_line(char *buffer, int size)
@@ -14,6 +15,27 @@ bool read_line(char *buffer, int size)
     if (len > 0 && buffer[len - 1] == '\n') // 如果读取到了换行符，将其替换为字符串结束符
         buffer[len - 1] = '\0';
 
+    return true;
+}
+
+bool read_int(const char *prompt, int *value)
+{
+    char buffer[32];
+    char *endptr = NULL;
+    long result;
+
+    if (!prompt || !value)
+        return false;
+
+    printf("%s", prompt);
+    if (!read_line(buffer, sizeof(buffer)))
+        return false;
+
+    result = strtol(buffer, &endptr, 10);
+    if (endptr == buffer || *endptr != '\0')
+        return false;
+
+    *value = (int)result;
     return true;
 }
 

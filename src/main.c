@@ -9,6 +9,9 @@
 #include "model.h"
 #include "storage.h"
 #include "utils.h"
+#include "borrow_ui.h"
+#include "item_ui.h"
+#include "report_ui.h"
 
 static void show_main_menu(void)
 {
@@ -78,15 +81,15 @@ int main(void)
         } 
         else if (strcmp(choice, "1") == 0) 
         {
-            handle_placeholder("物品管理");
+            item_manage_menu(items, &item_count, borrows, borrow_count);
         } 
         else if (strcmp(choice, "2") == 0) 
         {
-            handle_placeholder("借用管理");
+            borrow_manage_menu(borrows, &borrow_count, returns, &return_count, items, item_count);
         } 
         else if (strcmp(choice, "3") == 0) 
         {
-            handle_placeholder("报表查询");
+            report_manage_menu(items, item_count, borrows, borrow_count, returns, return_count);
         } 
         else if (strcmp(choice, "4") == 0) 
         {
