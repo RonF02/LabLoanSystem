@@ -27,10 +27,10 @@ static void show_main_menu(const Item items[], int item_count)
     printf("请选择：");
 }
 
-static void handle_placeholder(const char *name)
-{
-    printf("[%s] 功能尚未实现，后续 P2-P5 负责开发。\n\n", name);
-}
+// static void handle_placeholder(const char *name)
+// {
+//     printf("[%s] 功能尚未实现，后续 P2-P5 负责开发。\n\n", name);
+// }
 
 int main(void)
 {
@@ -42,13 +42,14 @@ int main(void)
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 #endif
-    Item items[MAX_ITEMS];
-    BorrowRecord borrows[MAX_BORROW_RECORDS];
-    ReturnRecord returns[MAX_RETURN_RECORDS];
-    int item_count = 0;
-    int borrow_count = 0;
-    int return_count = 0;
-    char choice[16];
+
+    Item items[MAX_ITEMS]; // 创建全局的物品数组，缓存修改
+    BorrowRecord borrows[MAX_BORROW_RECORDS]; // 创建全局的借用记录数组，缓存修改
+    ReturnRecord returns[MAX_RETURN_RECORDS]; // 创建全局的归还记录数组，缓存修改
+    int item_count = 0; // 当前物品数量
+    int borrow_count = 0; // 当前借用记录数量
+    int return_count = 0; // 当前归还记录数量
+    char choice[16]; // 用户输入缓冲区
 
     if (!ensure_data_directory()) 
     {
