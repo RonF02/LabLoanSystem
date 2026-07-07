@@ -70,22 +70,24 @@ int main(void)
         fprintf(stderr, "警告：读取归还数据失败，系统将以空数据启动。\n");
     }
 
+    // 程序入口
     while (1) 
     {
-        show_main_menu(items, item_count);
-        if (!read_line(choice, sizeof(choice))) 
+        show_main_menu(items, item_count); // 展示主菜单
+        if (!read_line(choice, sizeof(choice))) // 使用工具中的 read_line 函数读取用户输入
         {
             puts("输入读取失败，程序退出。");
             break;
         }
 
-        if (strcmp(choice, "0") == 0) 
+        // 根据用户选择调用不同的管理菜单
+        if (strcmp(choice, "0") == 0)
         {
             break;
         } 
         else if (strcmp(choice, "1") == 0) 
         {
-            item_manage_menu(items, &item_count, borrows, borrow_count);
+            item_manage_menu(items, &item_count, borrows, borrow_count); // 已人工验收通过
         } 
         else if (strcmp(choice, "2") == 0) 
         {
@@ -105,6 +107,7 @@ int main(void)
         }
     }
 
+    // 退出时自动保存数据
     bool items_saved = save_items(items, item_count);
     bool borrows_saved = save_borrow_records(borrows, borrow_count);
     bool returns_saved = save_return_records(returns, return_count);

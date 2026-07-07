@@ -117,3 +117,27 @@ void print_items_preview(const Item items[], int count)
     }
     puts("----+--------+----------+----------+------+------------------------");
 }
+
+static int date_to_int(const char *date)
+{
+    if (!date || strlen(date) != 10)
+        return -1;
+
+    int year = (date[0] - '0') * 1000 + (date[1] - '0') * 100 +
+               (date[2] - '0') * 10 + (date[3] - '0');
+    int month = (date[5] - '0') * 10 + (date[6] - '0');
+    int day = (date[8] - '0') * 10 + (date[9] - '0');
+
+    return year * 10000 + month * 100 + day;
+}
+
+bool is_date_before_or_equal(const char *left, const char *right)
+{
+    int left_value = date_to_int(left);
+    int right_value = date_to_int(right);
+
+    if (left_value < 0 || right_value < 0)
+        return false;
+
+    return left_value <= right_value;
+}

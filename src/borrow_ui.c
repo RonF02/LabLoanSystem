@@ -5,9 +5,8 @@
 #include <string.h>
 #include <time.h>
 
-bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
-                        ReturnRecord returns[], int *return_count,
-                        Item items[], int item_count)
+// 借用管理菜单，提供借用登记和归还登记功能
+bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord returns[], int *return_count, Item items[], int item_count)
 {
     char choice[16];
 
@@ -29,13 +28,13 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
 
         if (strcmp(choice, "1") == 0)
         {
-            char user[MAX_USER_LENGTH];
-            char item_code[MAX_CODE_LENGTH];
-            char borrow_date[MAX_DATE_LENGTH];
-            char due_date[MAX_DATE_LENGTH];
-            int quantity;
-            time_t now = time(NULL);
-            struct tm *local = localtime(&now);
+            char user[MAX_USER_LENGTH]; // 缓存借用人
+            char item_code[MAX_CODE_LENGTH]; // 缓存物品编号
+            char borrow_date[MAX_DATE_LENGTH]; // 缓存借用日期
+            char due_date[MAX_DATE_LENGTH]; // 缓存预计归还日期
+            int quantity; // 缓存借用数量
+            time_t now = time(NULL); // 获取当前系统时间
+            struct tm *local = localtime(&now); // 将系统时间转换为本地时间结构
 
             printf("请输入借用人：");
             if (!read_line(user, sizeof(user)) || strlen(user) == 0)
@@ -63,8 +62,8 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
                 continue;
             }
 
-            snprintf(borrow_date, sizeof(borrow_date), "%04d-%02d-%02d",
-                     local->tm_year + 1900, local->tm_mon + 1, local->tm_mday);
+            // 将当前日期格式化为 YYYY-MM-DD 形式
+            snprintf(borrow_date, sizeof(borrow_date), "%04d-%02d-%02d", local->tm_year + 1900, local->tm_mon + 1, local->tm_mday);
 
             printf("请输入预计归还日期 (YYYY-MM-DD)：");
             if (!read_line(due_date, sizeof(due_date)) || !is_valid_date(due_date))
@@ -72,10 +71,14 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
                 puts("预计归还日期格式无效。\n");
                 continue;
             }
+            if (!is_date_before_or_equal(borrow_date, due_date))
+            {
+                puts("预计归还日期不能早于借用日期。\n");
+                continue;
+            }
 
             int generated_id = borrow_next_id(borrows, *borrow_count);
-            if (borrow_register(borrows, borrow_count, items, item_count,
-                                user, item_code, quantity, borrow_date, due_date))
+            if (borrow_register(borrows, borrow_count, items, item_count,  user, item_code, quantity, borrow_date, due_date))
             {
                 printf("借用登记成功，系统已自动生成借用记录 ID：%d\n\n", generated_id);
                 puts("输入 0 返回上级。\n");
@@ -85,14 +88,21 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
             }
 
             puts("借用登记失败，请检查物品编号、库存和输入信息。\n");
+            puts("输入 0 返回上级。\n");
+            char flush[16];
+            read_line(flush, sizeof(flush));
             continue;
         }
+
+        // 用户选择归还登记
         else if (strcmp(choice, "2") == 0)
         {
             int borrow_id;
             int quantity;
             char return_date[MAX_DATE_LENGTH];
 
+
+            // 输入数据并进行验证
             if (!read_int("请输入借用记录 ID：", &borrow_id) || borrow_id <= 0)
             {
                 puts("借用记录 ID 输入无效。\n");
@@ -112,8 +122,8 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
                 continue;
             }
 
-            if (borrow_return(borrows, *borrow_count, returns, return_count,
-                              items, item_count, borrow_id, quantity, return_date))
+            // 调用 borrow_return 函数进行归还登记
+            if (borrow_return(borrows, *borrow_count, returns, return_count, items, item_count, borrow_id, quantity, return_date))
             {
                 puts("归还登记成功。\n");
                 puts("输入 0 返回上级。\n");

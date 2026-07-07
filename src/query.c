@@ -3,16 +3,14 @@
 #include <stdio.h>
 #include <string.h>
 
-void query_borrow_records(Item items[], int item_cnt,
-                          BorrowRecord borrows[], int borrow_cnt,
-                          const char *keyword)
+void query_borrow_records(Item items[], int item_cnt, BorrowRecord borrows[], int borrow_cnt, const char *keyword)
 {
-    int has_result = 0;
-    printf("\n==================== 查询结果 ====================\n");
+    int has_result = 0; // 标记是否有匹配结果
+    printf("\n========================= 查询结果 =============================\n");
     printf("借用ID\t借用人\t物品编号\t物品名称\t借用数量\t借用日期\t预计归还\t状态\n");
     printf("---------------------------------------------------------\n");
 
-    for (int i = 0; i < borrow_cnt; i++)
+    for (int i = 0; i < borrow_cnt; i++) // 遍历所有借用记录
     {
         BorrowRecord br = borrows[i];
         // 使用规定宏定义
