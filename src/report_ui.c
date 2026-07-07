@@ -28,23 +28,20 @@ bool report_manage_menu(Item items[], int item_count,
         if (!read_line(choice, sizeof(choice)))
         {
             puts("读取输入失败。\n");
+            stop();
             return false;
         }
 
         if (strcmp(choice, "1") == 0)
         {
             print_detail_report(items, item_count, borrows, borrow_count, returns, return_count);
-            puts("输入 0 返回上级。\n");
-            char flush[16];
-            read_line(flush, sizeof(flush));
+            stop();
             continue;
         }
         else if (strcmp(choice, "2") == 0)
         {
             print_stat_report(items, item_count, borrows, borrow_count, returns, return_count);
-            puts("输入 0 返回上级。\n");
-            char flush[16];
-            read_line(flush, sizeof(flush));
+            stop();
             continue;
         }
         else if (strcmp(choice, "0") == 0)
@@ -53,5 +50,6 @@ bool report_manage_menu(Item items[], int item_count,
         }
 
         puts("无效选择。\n");
+        stop();
     }
 }

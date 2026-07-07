@@ -99,11 +99,12 @@ int main(void)
         } 
         else if (strcmp(choice, "4") == 0) 
         {
-            sync_data(items, item_count, borrows, borrow_count, returns, return_count);
+            sync_data_menu(items, item_count, borrows, borrow_count, returns, return_count);
         } 
         else 
         {
             puts("无效选择，请重新输入。\n");
+            stop();
         }
     }
 

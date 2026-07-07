@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 // 从标准输入读取一行字符串
 bool read_line(char *buffer, int size)
@@ -107,7 +108,7 @@ void print_items_preview(const Item items[], int count)
     puts("----+--------+----------+----------+------+------------------------");
     for (int i = 0; i < count; ++i)
     {
-        printf("%-3d |%8s|%-12s| %-8s | %-4d | %s\n",
+        printf("%-3d |%8s|%-12s| %-8s | %-4d | %s",
                items[i].id,
                items[i].code,
                items[i].name,
@@ -140,4 +141,34 @@ bool is_date_before_or_equal(const char *left, const char *right)
         return false;
 
     return left_value <= right_value;
+}
+
+void stop()
+{
+    puts("输入回车返回上级。\n");
+    char flush[16];
+    read_line(flush, sizeof(flush));
+}
+
+
+char *get_current_date(void)
+{
+    static char date[11];
+
+    time_t now = time(NULL);
+    struct tm *local = localtime(&now);
+
+    if (!local)
+    {
+        puts("获取系统时间失败。\n");
+        stop();
+        return NULL;
+    }
+
+    snprintf(date, sizeof(date), "%04d-%02d-%02d",
+             local->tm_year + 1900,
+             local->tm_mon + 1,
+             local->tm_mday);
+
+    return date;
 }
