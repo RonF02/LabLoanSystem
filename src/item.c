@@ -6,6 +6,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+bool item_generate_code(const Item items[], int count, char *code, size_t size)
+{
+    if (!code || size == 0)
+        return false;
+
+    int next_id = item_next_id(items, count);
+    int written = snprintf(code, size, "ITEM-%03d", next_id);
+    return written > 0 && (size_t)written < size;
+}
+
 // 计算下一个可用的物品 ID，保证 ID 唯一且从 1 开始递增。
 int item_next_id(const Item items[], int count)
 {
@@ -80,22 +90,32 @@ bool item_adjust_quantity(Item items[], int count, const char *code,
 bool item_add(Item items[], int *count, const char *code, const char *name,
               const char *model, int quantity, const char *description)
 {
-    if (!count || !code || !name || !model || !description)
+    if (!count || !name || !model || !description)
         return false;
     if (*count >= MAX_ITEMS)
         return false;
     if (quantity < 0)
         return false;
-    if (strlen(code) == 0 || strlen(name) == 0)
+
+    char generated_code[MAX_CODE_LENGTH];
+    const char *final_code = code;
+    if (!code || strlen(code) == 0)
+    {
+        if (!item_generate_code(items, *count, generated_code, sizeof(generated_code)))
+            return false;
+        final_code = generated_code;
+    }
+
+    if (strlen(final_code) == 0 || strlen(name) == 0 || strlen(model) == 0)
         return false;
 
     // 编号不得重复
-    if (item_find_by_code(items, *count, code) >= 0)
+    if (item_find_by_code(items, *count, final_code) >= 0)
         return false;
 
     Item *new_item = &items[*count];
     new_item->id = item_next_id(items, *count);
-    strncpy(new_item->code, code, MAX_CODE_LENGTH - 1);
+    strncpy(new_item->code, final_code, MAX_CODE_LENGTH - 1);
     new_item->code[MAX_CODE_LENGTH - 1] = '\0';
     strncpy(new_item->name, name, MAX_NAME_LENGTH - 1);
     new_item->name[MAX_NAME_LENGTH - 1] = '\0';

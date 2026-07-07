@@ -41,10 +41,9 @@ bool item_manage_menu(Item items[], int *item_count,
         char description[MAX_DESC_LENGTH];
         int quantity;
 
-        printf("请输入物品编号：");
-        if (!read_line(code, sizeof(code)) || strlen(code) == 0)
+        if (!item_generate_code(items, *item_count, code, sizeof(code)))
         {
-            puts("物品编号不能为空。\n");
+            puts("生成物品编号失败。\n");
             return false;
         }
 
@@ -77,7 +76,7 @@ bool item_manage_menu(Item items[], int *item_count,
 
         if (item_add(items, item_count, code, name, model, quantity, description))
         {
-            puts("物品新增成功。\n");
+            printf("物品新增成功，系统已自动生成物品编号：%s\n\n", code);
             return true;
         }
 

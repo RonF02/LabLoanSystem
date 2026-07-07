@@ -102,7 +102,8 @@ bool borrow_register(BorrowRecord borrows[], int *borrow_count,
         return false;
     if (quantity <= 0)
         return false;
-    if (strlen(user) == 0 || strlen(item_code) == 0)
+    if (strlen(user) == 0 || strlen(item_code) == 0 ||
+        strlen(borrow_date) == 0 || strlen(due_date) == 0)
         return false;
     if (!is_valid_date(borrow_date) || !is_valid_date(due_date))
         return false;

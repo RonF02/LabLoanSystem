@@ -2,6 +2,7 @@
 #define ITEM_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include "model.h"
 
 // 新增物品：将新物品加入列表，自动分配 ID。若编号重复则返回 false。
@@ -33,6 +34,9 @@ bool item_adjust_quantity(Item items[], int count, const char *code,
 
 // 获取下一个可用的物品 ID（供新增和外部调用使用）。
 int item_next_id(const Item items[], int count);
+
+// 生成一个可用的物品编号，格式如 ITEM-001。
+bool item_generate_code(const Item items[], int count, char *code, size_t size);
 
 // 物品管理 UI 入口由 item_ui.c 提供。
 

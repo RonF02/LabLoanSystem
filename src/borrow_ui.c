@@ -63,10 +63,11 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
             return false;
         }
 
+        int generated_id = borrow_next_id(borrows, *borrow_count);
         if (borrow_register(borrows, borrow_count, items, item_count,
                             user, item_code, quantity, borrow_date, due_date))
         {
-            puts("借用登记成功。\n");
+            printf("借用登记成功，系统已自动生成借用记录 ID：%d\n\n", generated_id);
             return true;
         }
 
