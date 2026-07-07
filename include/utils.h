@@ -2,10 +2,13 @@
 #define UTILS_H
 
 #include <stdbool.h>
+#include "model.h"
 
 bool read_line(char *buffer, int size);
 bool read_int(const char *prompt, int *value);
 bool is_valid_date(const char *date);
 int safe_strcmp(const char *a, const char *b);
+void clear_screen(void);
+void print_items_preview(const Item items[], int count);
 
 #endif // UTILS_H

@@ -84,3 +84,36 @@ int safe_strcmp(const char *a, const char *b)
     if (!b) b = "";
     return strcmp(a, b);
 }
+
+void clear_screen(void)
+{
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void print_items_preview(const Item items[], int count)
+{
+    puts("=== 当前物品库存 ===");
+    if (count <= 0)
+    {
+        puts("暂无物品记录。\n");
+        return;
+    }
+
+    puts("ID  |  编号  |   名称   |   型号   | 库存 | 描述");
+    puts("----+--------+----------+----------+------+------------------------");
+    for (int i = 0; i < count; ++i)
+    {
+        printf("%-3d |%8s|%-12s| %-8s | %-4d | %s\n",
+               items[i].id,
+               items[i].code,
+               items[i].name,
+               items[i].model,
+               items[i].quantity,
+               items[i].description);
+    }
+    puts("----+--------+----------+----------+------+------------------------");
+}

@@ -14,9 +14,11 @@
 #include "report_ui.h"
 #include "sync.h"
 
-static void show_main_menu(void)
+static void show_main_menu(const Item items[], int item_count)
 {
+    clear_screen();
     puts("=== 实验室物品出入账管理系统 ===");
+    print_items_preview(items, item_count);
     puts("1. 物品管理");
     puts("2. 借用管理");
     puts("3. 报表查询");
@@ -69,7 +71,7 @@ int main(void)
 
     while (1) 
     {
-        show_main_menu();
+        show_main_menu(items, item_count);
         if (!read_line(choice, sizeof(choice))) 
         {
             puts("输入读取失败，程序退出。");
