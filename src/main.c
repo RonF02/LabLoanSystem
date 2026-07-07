@@ -12,6 +12,7 @@
 #include "borrow_ui.h"
 #include "item_ui.h"
 #include "report_ui.h"
+#include "sync.h"
 
 static void show_main_menu(void)
 {
@@ -93,17 +94,7 @@ int main(void)
         } 
         else if (strcmp(choice, "4") == 0) 
         {
-            bool items_saved = save_items(items, item_count);
-            bool borrows_saved = save_borrow_records(borrows, borrow_count);
-            bool returns_saved = save_return_records(returns, return_count);
-            if (items_saved && borrows_saved && returns_saved)
-            {
-                puts("数据已成功同步。");
-            } 
-            else 
-            {
-                puts("数据同步失败，请检查文件写入权限。");
-            }
+            sync_data(items, item_count, borrows, borrow_count, returns, return_count);
         } 
         else 
         {

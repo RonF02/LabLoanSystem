@@ -6,8 +6,13 @@
 #include "borrow.h"
 #include "item.h"
 
-bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count,
-                        ReturnRecord returns[], int *return_count,
-                        Item items[], int item_count);
+bool borrow_manage_menu
+(
+    BorrowRecord borrows[], 
+    int *borrow_count,           
+    ReturnRecord returns[], 
+    int *return_count,
+    Item items[], int item_count
+);
 
 #endif // BORROW_UI_H
