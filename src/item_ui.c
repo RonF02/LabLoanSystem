@@ -38,6 +38,7 @@ bool item_manage_menu(Item items[], int *item_count, const BorrowRecord borrows[
         if (!read_line(choice, sizeof(choice)))
         {
             puts("读取输入失败。\n");
+            stop();
             return false;
         }
 
@@ -79,10 +80,15 @@ bool item_manage_menu(Item items[], int *item_count, const BorrowRecord borrows[
                 stop();
                 continue;
             }
-
+            
             printf("请输入物品描述：");
-            scanf("%[^\n]", description); // 读取整行描述，包括空格和换行符
-
+            if (!read_line(description, sizeof(description)))
+            {
+                puts("物品描述读取失败。\n");
+                stop();
+                continue;
+            }
+            
             // 调用 item_add 函数新增物品
             if (item_add(items, item_count, code, name, model, quantity, description))
             {

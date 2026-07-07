@@ -104,7 +104,6 @@ void print_record_by_name(const BorrowRecord borrows[], int count, const char *u
     {
         print_borrow_record(&borrows[indexes[i]]);
     }
-    stop();
 }
 
 // 计算某个借用记录已归还的总数量。
