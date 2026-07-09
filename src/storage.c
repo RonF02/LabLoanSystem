@@ -60,6 +60,14 @@ static bool parse_item_line(const char *line, Item *item)
         &item->quantity, 
         item->description
     );
+    for (int i = 0; i < strlen(item->description); ++ i)
+    {
+        if (item->description[i] == '\n')
+        {
+            item->description[i] = '\0';
+            break;
+        }
+    }
     return l == 6;
 }
 
@@ -70,7 +78,7 @@ static bool parse_borrow_line(const char *line, BorrowRecord *record)
     int l = sscanf
     (
         line,
-        "%d,%63[^,],%31[^,],%d,%15[^,],%15[^,],%d",
+        "%d,%63[^,],%31[^,],%d,%15[^,],%15[^,],%d\n",
         &record->id, 
         record->user, 
         record->item_code, 
@@ -230,6 +238,63 @@ bool save_return_records(const ReturnRecord returns[], int count)
             returns[i].return_date,
             returns[i].quantity
         );
+    }
+    fclose(file);
+    return true;
+}
+
+
+bool load_users(User users[], int *count)
+{
+    FILE *file = fopen("data/users.txt", "r");
+    if (!file)
+        return false;
+
+    char line[256];
+    *count = 0;
+    while (fgets(line, sizeof(line), file) && *count < MAX_USER) 
+    {
+        int fields = sscanf(
+            line,
+            "%63[^,],%63[^,],%15[^\n]",
+            users[*count].username,
+            users[*count].password,
+            users[*count].level
+        );
+
+        if (fields != 3)
+        {
+            fields = sscanf(
+                line,
+                "%63[^,],%63[^\n]",
+                users[*count].username,
+                users[*count].password
+            );
+            if (fields == 2)
+            {
+                strncpy(users[*count].level, "guest", MAX_LEVEL_LENGTH - 1);
+                users[*count].level[MAX_LEVEL_LENGTH - 1] = '\0';
+            }
+        }
+
+        if (fields == 2 || fields == 3) 
+        {
+            (*count)++;
+        }
+    }
+    fclose(file);
+    return true;
+}
+
+bool save_users(const User users[], int count)
+{
+    FILE *file = fopen("data/users.txt", "w");
+    if (!file)
+        return false;
+
+    for (int i = 0; i < count; ++i) 
+    {
+        fprintf(file, "%s,%s,%s\n", users[i].username, users[i].password, users[i].level);
     }
     fclose(file);
     return true;

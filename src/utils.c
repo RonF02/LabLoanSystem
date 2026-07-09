@@ -109,7 +109,7 @@ void print_items_preview(const Item items[], int count)
     puts("----+--------+----------+-------+----+------------------------");
     for (int i = 0; i < count; ++i)
     {
-        printf("%-3d |%-8s|%s\t|%-s\t|%-4d|%-s",
+        printf("%-3d |%-8s|%s\t|%-s\t|%-4d|%-s\n",
                items[i].id,
                items[i].code,
                items[i].name,

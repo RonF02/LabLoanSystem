@@ -6,7 +6,7 @@
 #include <time.h>
 
 // 借用管理菜单，提供借用登记和归还登记功能
-bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord returns[], int *return_count, Item items[], int item_count)
+bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord returns[], int *return_count, Item items[], int item_count, const char *current_username)
 {
     char choice[16];
 
@@ -35,17 +35,12 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord 
             char borrow_date[MAX_DATE_LENGTH]; // 缓存借用日期
             char due_date[MAX_DATE_LENGTH]; // 缓存预计归还日期
             int quantity; // 缓存借用数量
+            strncpy(user, current_username, sizeof(user) - 1);
+            user[sizeof(user) - 1] = '\0';
             strncpy(borrow_date, get_current_date(), sizeof(borrow_date) - 1);
             borrow_date[sizeof(borrow_date) - 1] = '\0';
 
-            printf("请输入借用人：");
-            if (!read_line(user, sizeof(user)) || strlen(user) == 0)
-            {
-                puts("借用人不能为空。\n");
-                stop();
-                continue;
-            }
-
+            printf("借用人：%s\n", user);
             printf("请输入物品编号：");
             if (!read_line(item_code, sizeof(item_code)) || strlen(item_code) == 0)
             {

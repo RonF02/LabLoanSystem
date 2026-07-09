@@ -11,5 +11,7 @@ bool load_borrow_records(BorrowRecord borrows[], int *count);
 bool save_borrow_records(const BorrowRecord borrows[], int count);
 bool load_return_records(ReturnRecord returns[], int *count);
 bool save_return_records(const ReturnRecord returns[], int count);
+bool load_users(User users[], int *count);
+bool save_users(const User users[], int count);
 
 #endif // STORAGE_H
