@@ -11,6 +11,7 @@ static const char *DATA_DIR = "data";
 static const char *ITEMS_FILE = "data/items.txt";
 static const char *BORROW_FILE = "data/borrow_records.txt";
 static const char *RETURN_FILE = "data/return_records.txt";
+static const char *USERS_FILE = "data/users.txt";
 
 // 确保文件存在
 static bool ensure_file_exists(const char *path)
@@ -25,6 +26,36 @@ static bool ensure_file_exists(const char *path)
         fclose(file);
         return true;
     }
+}
+
+static bool ensure_default_admin_user(void)
+{
+    FILE *file = fopen(USERS_FILE, "r");
+    if (!file)
+        return false;
+
+    bool has_content = false;
+    int ch;
+    while ((ch = fgetc(file)) != EOF)
+    {
+        if (ch != '\n' && ch != '\r' && ch != ' ' && ch != '\t')
+        {
+            has_content = true;
+            break;
+        }
+    }
+    fclose(file);
+
+    if (has_content)
+        return true;
+
+    file = fopen(USERS_FILE, "w");
+    if (!file)
+        return false;
+
+    fprintf(file, "admin,123456,admin\n");
+    fclose(file);
+    return true;
 }
 
 // 保证数据目录存在
@@ -42,8 +73,10 @@ bool ensure_data_directory(void)
     bool items_file_exists = ensure_file_exists(ITEMS_FILE);
     bool borrow_file_exists = ensure_file_exists(BORROW_FILE);
     bool return_file_exists = ensure_file_exists(RETURN_FILE);
+    bool users_file_exists = ensure_file_exists(USERS_FILE);
+    bool default_user_exists = users_file_exists && ensure_default_admin_user();
 
-    return items_file_exists && borrow_file_exists && return_file_exists;
+    return items_file_exists && borrow_file_exists && return_file_exists && default_user_exists;
 }
 
 // 解包item.txt下的每一行
@@ -246,7 +279,7 @@ bool save_return_records(const ReturnRecord returns[], int count)
 
 bool load_users(User users[], int *count)
 {
-    FILE *file = fopen("data/users.txt", "r");
+    FILE *file = fopen(USERS_FILE, "r");
     if (!file)
         return false;
 
@@ -288,7 +321,7 @@ bool load_users(User users[], int *count)
 
 bool save_users(const User users[], int count)
 {
-    FILE *file = fopen("data/users.txt", "w");
+    FILE *file = fopen(USERS_FILE, "w");
     if (!file)
         return false;
 

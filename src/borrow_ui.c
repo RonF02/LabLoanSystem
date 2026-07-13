@@ -5,6 +5,37 @@
 #include <string.h>
 #include <time.h>
 
+static void print_borrow_record(const BorrowRecord *record)
+{
+    if (!record)
+        return;
+
+    printf("ID:%d 用户:%s 物品编号:%s 数量:%d 借用日期:%s 预计归还日期:%s 状态:%s\n",
+           record->id,
+           record->user,
+           record->item_code,
+           record->quantity,
+           record->borrow_date,
+           record->due_date,
+           (record->status == BORROW_ACTIVE) ? "借用中" : "已归还");
+}
+
+static void print_records_by_name(const BorrowRecord borrows[], int count, const char *user)
+{
+    int indexes[MAX_BORROW_RECORDS];
+    int matched = borrow_find_by_user(borrows, count, user, indexes, MAX_BORROW_RECORDS);
+    if (matched == 0)
+    {
+        puts("未找到相关借用记录。\n");
+        return;
+    }
+
+    for (int i = 0; i < matched; ++i)
+    {
+        print_borrow_record(&borrows[indexes[i]]);
+    }
+}
+
 // 借用管理菜单，提供借用登记和归还登记功能
 bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord returns[], int *return_count, Item items[], int item_count, const char *current_username)
 {
@@ -144,7 +175,7 @@ bool borrow_manage_menu(BorrowRecord borrows[], int *borrow_count, ReturnRecord 
                 stop();
                 continue;
             }
-            print_record_by_name(borrows, *borrow_count, name);
+            print_records_by_name(borrows, *borrow_count, name);
             stop();
             continue;
         }

@@ -1,0 +1,9 @@
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/LabLoanSystemGUI.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/edit_cache.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/rebuild_cache.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/list_install_components.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/install.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/install/local.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/install/strip.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/LabLoanSystemGUI_autogen_timestamp_deps.dir
+D:/Desktop/qt/LabLoanSystemGUI/build/UCRT64_Qt6_Release/CMakeFiles/LabLoanSystemGUI_autogen.dir

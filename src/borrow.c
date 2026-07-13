@@ -3,7 +3,6 @@
 #include "utils.h"
 
 #include <limits.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -74,36 +73,6 @@ int borrow_find_by_user(const BorrowRecord borrows[], int count, const char *use
         }
     }
     return matched;
-}
-
-void print_borrow_record(const BorrowRecord *record)
-{
-    if (!record)
-        return;
-
-    printf("ID:%d 用户:%s 物品编号:%s 数量:%d 借用日期:%s 预计归还日期:%s 状态:%s\n",
-           record->id,
-           record->user,
-           record->item_code,
-           record->quantity,
-           record->borrow_date,
-           record->due_date,
-           (record->status == BORROW_ACTIVE) ? "借用中" : "已归还");
-}
-
-void print_record_by_name(const BorrowRecord borrows[], int count, const char *user)
-{
-    int indexes[MAX_BORROW_RECORDS];
-    int matched = borrow_find_by_user(borrows, count, user, indexes, MAX_BORROW_RECORDS);
-    if (matched == 0)
-    {
-        puts("未找到相关借用记录。\n");
-        return;
-    }
-    for (int i = 0; i < matched; ++i)
-    {
-        print_borrow_record(&borrows[indexes[i]]);
-    }
 }
 
 // 计算某个借用记录已归还的总数量。

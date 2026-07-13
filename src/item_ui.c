@@ -152,8 +152,14 @@ bool item_manage_menu(Item items[], int *item_count, const BorrowRecord borrows[
             // 调用 item_update 函数修改物品信息
             if (item_update(items, *item_count, code, name, model, quantity, description))
             {
-                sync_items(items, *item_count); // 同步物品数据到文件
-                puts("物品修改成功，已同步至数据文件。\n");
+                if (sync_items(items, *item_count))
+                {
+                    puts("物品修改成功，已同步至数据文件。\n");
+                }
+                else
+                {
+                    puts("物品修改成功，但同步到数据文件失败。\n");
+                }
                 stop();
                 continue;
             }

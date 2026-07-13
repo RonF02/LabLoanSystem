@@ -1,11 +1,23 @@
 #ifndef QUERY_H
 #define QUERY_H
+
 #include "model.h"
 
-// 按关键字查询借用记录：匹配物品名称/物品编号/借用人
-// keyword：搜索关键字，传空字符串则查询全部
-void query_borrow_records(Item items[], int item_cnt,
-                          BorrowRecord borrows[], int borrow_cnt,
-                          const char *keyword);
+typedef struct
+{
+    int borrow_id;
+    char user[MAX_USER_LENGTH];
+    char item_code[MAX_CODE_LENGTH];
+    char item_name[MAX_NAME_LENGTH];
+    int quantity;
+    char borrow_date[MAX_DATE_LENGTH];
+    char due_date[MAX_DATE_LENGTH];
+    BorrowStatus status;
+} BorrowQueryRow;
+
+int query_borrow_records(const Item items[], int item_count,
+                         const BorrowRecord borrows[], int borrow_count,
+                         const char *keyword,
+                         BorrowQueryRow rows[], int row_max);
 
 #endif

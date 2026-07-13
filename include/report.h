@@ -1,16 +1,39 @@
 #ifndef REPORT_H
 #define REPORT_H
-// report.h 只保留报表生成接口，UI 入口由 report_ui.h 提供。
+
 #include "model.h"
 
-// 1. 打印完整出入账明细报表（所有借用+对应归还）
-void print_detail_report(Item items[], int item_cnt,
-                         BorrowRecord borrows[], int borrow_cnt,
-                         ReturnRecord returns[], int return_cnt);
+typedef struct
+{
+    int borrow_id;
+    char user[MAX_USER_LENGTH];
+    char item_name[MAX_NAME_LENGTH];
+    int borrow_quantity;
+    char borrow_date[MAX_DATE_LENGTH];
+    char due_date[MAX_DATE_LENGTH];
+    char return_date[MAX_DATE_LENGTH];
+    int return_quantity;
+    BorrowStatus status;
+} DetailReportRow;
 
-// 2. 物品借用汇总统计报表：每种物品总借出、总归还、当前在外数量
-void print_stat_report(Item items[], int item_cnt,
-                       BorrowRecord borrows[], int borrow_cnt,
-                       ReturnRecord returns[], int return_cnt);
+typedef struct
+{
+    char item_code[MAX_CODE_LENGTH];
+    char item_name[MAX_NAME_LENGTH];
+    int total_borrow_times;
+    int total_borrow_quantity;
+    int total_return_quantity;
+    int out_quantity;
+} StatReportRow;
 
-#endif
+int build_detail_report(const Item items[], int item_count,
+                        const BorrowRecord borrows[], int borrow_count,
+                        const ReturnRecord returns[], int return_count,
+                        DetailReportRow rows[], int row_max);
+
+int build_stat_report(const Item items[], int item_count,
+                      const BorrowRecord borrows[], int borrow_count,
+                      const ReturnRecord returns[], int return_count,
+                      StatReportRow rows[], int row_max);
+
+#endif // REPORT_H

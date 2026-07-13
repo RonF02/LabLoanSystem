@@ -1,53 +1,62 @@
 #include "query.h"
 #include "utils.h"
-#include <stdio.h>
+
 #include <string.h>
 
-void query_borrow_records(Item items[], int item_cnt, BorrowRecord borrows[], int borrow_cnt, const char *keyword)
+static void copy_string(char *dest, size_t dest_size, const char *src)
 {
-    int has_result = 0; // 标记是否有匹配结果
-    printf("\n========================= 查询结果 =============================\n");
-    printf("借用ID\t借用人\t物品编号\t物品名称\t借用数量\t借用日期\t预计归还\t状态\n");
-    printf("---------------------------------------------------------\n");
+    if (!dest || dest_size == 0)
+        return;
 
-    for (int i = 0; i < borrow_cnt; i++) // 遍历所有借用记录
+    strncpy(dest, src ? src : "", dest_size - 1);
+    dest[dest_size - 1] = '\0';
+}
+
+static const char *find_item_name(const Item items[], int item_count, const char *item_code)
+{
+    for (int i = 0; i < item_count; ++i)
     {
-        BorrowRecord br = borrows[i];
-        // 使用规定宏定义
-        char item_name[MAX_NAME_LENGTH] = "未知物品";
-        for (int j = 0; j < item_cnt; j++)
-        {
-            if (safe_strcmp(items[j].code, br.item_code) == 0)//safe_strcmp调用utils中的定义，安全调用避免崩溃
-            {
-                strncpy(item_name, items[j].name, MAX_NAME_LENGTH - 1);
-                item_name[MAX_NAME_LENGTH - 1] = '\0';
-                break;
-            }
-        }
-        // 无关键字：全部输出；有关键字：匹配名称/编号/借用人;strstr查找算法
-        int match = 0;
-        if (keyword == NULL || safe_strcmp(keyword, "") == 0)
-            match = 1;
-        else
-        {
-            // 物品名称匹配
-            if (strstr(item_name, keyword) != NULL) match = 1;
-            // 物品编号匹配
-            if (strstr(br.item_code, keyword) != NULL) match = 1;
-            // 借用人匹配
-            if (strstr(br.user, keyword) != NULL) match = 1;
-        }
-        if (!match) continue;
-
-        has_result = 1;
-        char status_str[16] = "未归还";
-        if (br.status == BORROW_RETURNED) // 枚举判断，model.h头文件中参数
-            strcpy(status_str, "已归还");
-        printf("%d\t%s\t%s\t%s\t%d\t%s\t%s\t%s\n",
-               br.id, br.user, br.item_code, item_name,
-               br.quantity, br.borrow_date, br.due_date, status_str);
+        if (safe_strcmp(items[i].code, item_code) == 0)
+            return items[i].name;
     }
-    if (!has_result)
-        printf("无匹配记录\n");
-    printf("=========================================================\n\n");
+    return "未知物品";
+}
+
+int query_borrow_records(const Item items[], int item_count,
+                         const BorrowRecord borrows[], int borrow_count,
+                         const char *keyword,
+                         BorrowQueryRow rows[], int row_max)
+{
+    if (!rows || row_max <= 0)
+        return 0;
+
+    int row_count = 0;
+    for (int i = 0; i < borrow_count && row_count < row_max; ++i)
+    {
+        const BorrowRecord *borrow = &borrows[i];
+        const char *item_name = find_item_name(items, item_count, borrow->item_code);
+        int match = keyword == NULL || safe_strcmp(keyword, "") == 0;
+
+        if (!match)
+        {
+            match = strstr(item_name, keyword) != NULL ||
+                    strstr(borrow->item_code, keyword) != NULL ||
+                    strstr(borrow->user, keyword) != NULL;
+        }
+
+        if (!match)
+            continue;
+
+        BorrowQueryRow *row = &rows[row_count++];
+        row->borrow_id = borrow->id;
+        copy_string(row->user, sizeof(row->user), borrow->user);
+        copy_string(row->item_code, sizeof(row->item_code), borrow->item_code);
+        copy_string(row->item_name, sizeof(row->item_name), item_name);
+        row->quantity = borrow->quantity;
+        copy_string(row->borrow_date, sizeof(row->borrow_date), borrow->borrow_date);
+        copy_string(row->due_date, sizeof(row->due_date), borrow->due_date);
+        row->status = borrow->status;
+    }
+
+    return row_count;
 }
